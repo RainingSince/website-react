@@ -3,6 +3,9 @@ import { IConfig } from 'umi-types';
 const config: IConfig = {
   treeShaking: true,
   disableCSSModules: true,
+  exportStatic: {
+    htmlSuffix: true,
+  },
   plugins: [
     ['umi-plugin-react', {
       antd: true,
