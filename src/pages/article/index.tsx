@@ -118,7 +118,8 @@ class ArticlePage extends React.Component<{ article, dispatch, history }, { targ
             {this.props.article.name}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>创建时间：{this.props.article.createDate}</div>
+            <div>创建时间：{this.props.article.author}</div>
+            <div style={{ marginLeft: '30px' }}>创建时间：{this.props.article.createDate}</div>
             <div style={{ marginLeft: '30px' }}>更新时间：{this.props.article.updateDate}</div>
           </div>
         </div>
@@ -135,7 +136,7 @@ class ArticlePage extends React.Component<{ article, dispatch, history }, { targ
       <div>
 
         {/*<CustomRecommed title="相关笔记">*/}
-          {/*<div>123</div>*/}
+        {/*<div>123</div>*/}
         {/*</CustomRecommed>*/}
 
         <CustomRecommed title="目录结构">

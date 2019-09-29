@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.less';
-import { Tag } from 'antd';
+import { Avatar, Tag } from 'antd';
 
 const colors = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue'];
 
@@ -30,7 +30,8 @@ class ArticleItem extends React.Component<{ article }, {}> {
       <div className='ai-tags'>{article.remark}</div>
 
       <div className='ai-tags'>
-        <div>创建时间: {article.createDate}</div>
+        <Avatar style={{ color: '#f56a00', backgroundColor: '#fde3cf' }}>{article.author[0]}</Avatar>
+        <div className='ai-desc'>创建时间: {article.createDate}</div>
         <div className='ai-desc'>更新时间: {article.updateDate}</div>
       </div>
 
