@@ -1,0 +1,18 @@
+defaultSeverity: error
+extends:
+  - tslint-latest
+  - tslint-config-prettier
+  - tslint-react
+  - tslint-eslint-rules
+jsRules:
+rules:
+  no-var-requires: false
+  no-submodule-imports: false
+  object-literal-sort-keys: false
+  jsx-no-lambda: false
+  no-implicit-dependencies: false
+  eofline: false
+  no-console: false
+  no-construct: false
+  no-debugger: false
+  no-reference: false

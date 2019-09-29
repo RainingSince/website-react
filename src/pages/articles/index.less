@@ -1,0 +1,68 @@
+.app-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  margin-top: 10px;
+}
+
+.app-title {
+  color: white;
+  font-size: 42px;
+  font-weight: 500;
+}
+
+.app-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
+.app-tag {
+  padding: 3px 15px;
+  margin: 0 5px;
+  font-size: 14px;
+  border-radius: 20px
+}
+
+.app-tag-select {
+  border-color: #108ee9;
+  background-color: #108ee9;
+  color: white;
+}
+
+.app-list {
+  max-width: 1200px;
+  width: 1200px;
+}
+
+.app-catalogs {
+  overflow: hidden;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: white;
+  box-shadow: 0 6px 18px 0 rgba(82, 94, 102, .15);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.app-item {
+  transform: translateY(0);
+  transition-duration: .3s;
+  box-shadow: 0 6px 18px 0 rgba(82, 94, 102, .15);
+}
+
+.app-item:hover {
+  transform: translateY(-5px);
+}
+
+.app-recent {
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.app-recent:hover {
+  color: #108ee9;
+}
