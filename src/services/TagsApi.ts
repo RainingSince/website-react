@@ -15,3 +15,11 @@ export async function getArticlesType(params) {
 export async function getDetail(id) {
   return request.get('article/' + id, null);
 }
+
+export async function getProjects(params) {
+  return request.get('project/', params);
+}
+
+export async function getProject(id) {
+  return request.get('project/' + id, null);
+}

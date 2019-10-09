@@ -19,7 +19,7 @@ class CustomHeader extends React.Component<CustomHeaderProps, {
   constructor(props) {
     super(props);
     this.state = {
-      headerMenus: ['首页', '笔记', '项目', '关于我'],
+      headerMenus: ['笔记', '项目'],
       defaultSelect: '0',
     };
   }
@@ -27,27 +27,19 @@ class CustomHeader extends React.Component<CustomHeaderProps, {
 
   componentDidMount() {
     let path = this.props.history.location.pathname;
-    this.menuIndexSelect(path);
+    let query = this.props.history.location.query;
+    this.menuIndexSelect(path, query);
   }
 
 
-  menuIndexSelect = (path) => {
+  menuIndexSelect = (path, query) => {
     let index = '0';
-    switch (path) {
-      case '/':
-        index = '0';
-        break;
-      case '/articles':
-      case '/article':
-        index = '1';
-        break;
-      case '/projects':
-        index = '2';
-        break;
-      case '/mine':
-        index = '3';
-        break;
-    }
+    if (path.indexOf('/projects') > -1) index = '1';
+    else if (path.indexOf('/mine') > -1) index = '2';
+    else if (path.indexOf('/article') > -1 && query.type == '2') index = '1';
+    else if (path.indexOf('/article') > -1 && query.type == '1') index = '0';
+    else index = '0';
+
     this.setState({
       defaultSelect: index,
     });
@@ -56,12 +48,10 @@ class CustomHeader extends React.Component<CustomHeaderProps, {
 
   menuClick = (item) => {
     let path = '/';
+    let type = '0';
     switch (item) {
-      case '首页':
-        path = '/';
-        break;
       case '笔记':
-        path = '/articles';
+        path = '/';
         break;
       case '项目':
         path = '/projects';
@@ -70,14 +60,14 @@ class CustomHeader extends React.Component<CustomHeaderProps, {
         path = '/mine';
         break;
     }
-    this.menuIndexSelect(path);
+    this.menuIndexSelect(path, type);
     this.props.history.push(path);
   };
 
 
   randerMenus() {
     return <Menu mode="horizontal"
-                 style={{ lineHeight: '62px', border: 'none', marginRight: '150px' }}
+                 style={{ width: '1200px', textAlign: 'end', lineHeight: '62px', border: 'none', marginRight: '30px' }}
                  defaultSelectedKeys={['0']}
                  selectedKeys={[this.state.defaultSelect]}>
       {

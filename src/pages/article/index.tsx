@@ -4,7 +4,7 @@ import { connect } from 'dva';
 import marked from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/xcode.css';
-import { Anchor, Divider } from 'antd';
+import { Anchor, Carousel, Divider, Spin } from 'antd';
 import CustomRecommed from '@/components/CustomRecommed';
 
 const { Link } = Anchor;
@@ -16,23 +16,28 @@ interface LevelTree {
 }
 
 // @ts-ignore
-@connect(({ article, loading }) => ({
+@connect(({ article, projects, loading }) => ({
   article: article.detail,
+  project: projects.detail,
   submitting: loading.effects['article/loadDetail'],
+  submittingP: loading.effects['projects/loadDetail'],
 }))
-class ArticlePage extends React.Component<{ article, dispatch, history }, { targetOffset }> {
+class ArticlePage extends React.Component<{ article, submitting, submittingP, dispatch, history, project }, { targetOffset, type }> {
 
   constructor(props) {
     super(props);
     this.state = {
       targetOffset: 0,
+      type: '',
     };
   }
 
   componentDidMount() {
     let id = this.props.history.location.query.id;
+    let type = this.props.history.location.query.type;
+    let path = type == '1' ? 'article/loadDetail' : 'projects/loadDetail';
     this.props.dispatch({
-      type: 'article/loadDetail',
+      type: path,
       playload: id,
     });
     this.setState({
@@ -59,7 +64,6 @@ class ArticlePage extends React.Component<{ article, dispatch, history }, { targ
     while ((result = patt.exec(content))) {
       menu.push({ level: result[1].length, title: result[2].replace('.', ''), children: [] });
     }
-    console.log(menu);
     return this.renderLevel(menu);
   };
 
@@ -104,45 +108,70 @@ class ArticlePage extends React.Component<{ article, dispatch, history }, { targ
     </Anchor>;
   };
 
+  renderImageList = () => {
+    if (this.state.type == '1') return '';
+    if (this.props.project.imageList) {
+      return <div className='pg-content' style={{ height: '300px' }}>
+        <Carousel autoplay>
+          {this.props.project.imageList.split(',').map((item, index) => {
+            return <img className='al-image' key={index} src={item}/>;
+          })}
+        </Carousel>
+      </div>;
+    } else return '';
+
+  };
+
 
   render() {
 
-    const content = this.props.article.content ? this.props.article.content : '';
+    let type = this.props.history.location.query.type;
+
+    const detail = type == '1' ? this.props.article : this.props.project;
+
+    const content = detail.content ? detail.content : '';
+    const loading = type == '1' ? this.props.submitting : this.props.submittingP;
 
     return <div className='pg-container'>
 
-      <div>
 
-        <div className='al-title' id='al-title'>
-          <h1>
-            {this.props.article.name}
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <div>创建时间：{this.props.article.author}</div>
-            <div style={{ marginLeft: '30px' }}>创建时间：{this.props.article.createDate}</div>
-            <div style={{ marginLeft: '30px' }}>更新时间：{this.props.article.updateDate}</div>
+      <Spin size="large" spinning={loading}>
+        <div>
+
+          <div className='al-title' id='al-title'>
+            <h1>
+              {detail.name}
+            </h1>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <div>创建时间：{detail.author}</div>
+              <div style={{ marginLeft: '30px' }}>创建时间：{detail.createDate}</div>
+              <div style={{ marginLeft: '30px' }}>更新时间：{detail.updateDate}</div>
+            </div>
           </div>
+
+          <Divider/>
+
+          {/*{this.renderImageList()}*/}
+
+
+          <div className='pg-content markdown-css'
+               style={{ marginTop: '30px' }}
+               dangerouslySetInnerHTML={{ __html: marked(content) }}
+          />
+
         </div>
-
-        <Divider/>
-
-        <div className='pg-content markdown-css'
-             style={{ marginTop: '30px' }}
-             dangerouslySetInnerHTML={{ __html: marked(content) }}
-        />
-
-      </div>
+      </Spin>
 
       <div>
 
         {/*<CustomRecommed title="相关笔记">*/}
         {/*<div>123</div>*/}
         {/*</CustomRecommed>*/}
-
-        <CustomRecommed title="目录结构">
-          {this.renderDir(content)}
-        </CustomRecommed>
-
+        <Spin size="large" spinning={loading}>
+          <CustomRecommed title="目录结构">
+            {this.renderDir(content)}
+          </CustomRecommed>
+        </Spin>
       </div>
 
     </div>;
