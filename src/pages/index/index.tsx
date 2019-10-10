@@ -1,6 +1,6 @@
 import React from 'react';
 import './index.less';
-import { List, Tag, Menu, Row } from 'antd';
+import { List, Tag, Menu, Row, Button } from 'antd';
 import { connect } from 'dva';
 import { withRouter } from 'umi';
 import CustomRecommed from '@/components/CustomRecommed';
@@ -16,7 +16,7 @@ import ArticleItem from '@/components/ArticleItem';
   submitting: loading.effects['article/loadArticles'],
 }))
 class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticles, tags, articles, history, catalogs },
-  { selectedCatalog, selectedTag }> {
+  { selectedCatalog, selectedTag, step, current, params }> {
 
   constructor(props) {
     super(props);
@@ -24,6 +24,9 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
     this.state = {
       selectedCatalog: '',
       selectedTag: '',
+      step: 10,
+      current: 1,
+      params: {},
     };
   }
 
@@ -50,6 +53,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
 
   loadArtiels = (params) => {
+    this.setState({ params: params });
     this.props.dispatch({
       type: 'article/loadArticles',
       playload: params,
@@ -140,9 +144,32 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
     });
   };
 
+  onLoadMore = () => {
+    let params = this.state.params;
+    let current= this.state.current;
+    current ++ ;
+    params = Object.assign(params, { current: current, step: this.state.step });
+    this.props.dispatch({
+      type: 'article/loadArticles',
+      playload: params,
+    });
+    this.setState({current:current})
+  };
+
 
   render() {
+    const isMore = this.props.articles.total > (this.state.current * this.state.step);
+    const loadMore = isMore && !this.props.submitting ? (<div
+      style={{
+        textAlign: 'center',
+        marginTop: 12,
+        height: 32,
+        lineHeight: '32px',
+      }}
+    >
+      <Button onClick={this.onLoadMore}>加载更多</Button>
 
+    </div>) : null;
 
     return (
 
@@ -160,6 +187,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
             <List itemLayout="vertical"
                   className="app-list"
+                  loadMore={loadMore}
                   loading={this.props.submitting}
                   dataSource={this.props.articles.records}
                   renderItem={item => this.renderListItem(item)}

@@ -48,6 +48,10 @@ export default {
   },
   reducers: {
     saveArticle(state, { playload }) {
+      if (playload.current > 1) {
+        playload.records = playload.records.concat(state.articles.records);
+        return { ...state, articles: playload };
+      }
       return { ...state, articles: playload };
     },
     saveHotArticle(state, { playload }) {

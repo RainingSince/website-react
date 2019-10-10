@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Card, List } from 'antd';
+import { Avatar, Button, Card, List } from 'antd';
 import { connect } from 'react-redux';
 import { withRouter } from 'umi';
 import moment from 'moment';
@@ -24,12 +24,42 @@ interface ProjectItem {
   projects: projects.projects,
   submitting: loading.effects['projects/loadProjects'],
 }))
-class ProjectPage extends React.Component<{ projects, submitting,dispatch, history }, {}> {
+class ProjectPage extends React.Component<{ projects, submitting, dispatch, history }, { step, current }> {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      step: 10,
+      current: 1,
+    };
+  }
+
+  onLoadMore = () => {
+    let current = this.state.current;
+    current++;
+    let params = { current: current, step: this.state.step };
+    this.loadProjects(params);
+    this.setState({ current: current });
+  };
 
   renderList = () => {
+    const isMore = this.props.projects.total > (this.state.current * this.state.step);
+    const loadMore = isMore && !this.props.submitting ? (<div
+      style={{
+        textAlign: 'center',
+        marginTop: 12,
+        height: 32,
+        lineHeight: '32px',
+      }}
+    >
+      <Button onClick={this.onLoadMore}>加载更多</Button>
+
+    </div>) : null;
     const { projects } = this.props;
 
     return <List
+      loadMore={loadMore}
       loading={this.props.submitting}
       grid={{ gutter: 16, column: 3 }}
       dataSource={projects.records}

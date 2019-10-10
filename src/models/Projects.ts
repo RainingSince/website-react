@@ -28,6 +28,10 @@ export default {
 
   reducers: {
     saveProject(state, { playload }) {
+      if (playload.current > 1) {
+        playload.records = playload.records.concat(state.projects.records);
+        return { ...state, projects: playload };
+      }
       return { ...state, projects: playload };
     },
     saveDetail(state, { playload }) {
