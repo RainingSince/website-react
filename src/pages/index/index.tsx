@@ -40,7 +40,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
       type: 'article/loadRencentArticles',
       playload: null,
     });
-    this.loadArtiels(null);
+    this.loadArtiels(null, false);
   }
 
 
@@ -52,13 +52,15 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
   };
 
 
-  loadArtiels = (params) => {
+  loadArtiels = (params, catalog) => {
+    let oParams = this.state.params;
+    params = Object.assign(oParams, params);
     this.setState({ params: params });
     this.props.dispatch({
       type: 'article/loadArticles',
       playload: params,
     });
-    if (params && params.catalogId) this.loadTags(params);
+    if (catalog) this.loadTags(params);
   };
 
 
@@ -84,7 +86,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
     this.setState({
       selectedTag: id,
     });
-    this.loadArtiels({ tagId: id });
+    this.loadArtiels({ tagId: id }, false);
   };
 
   renderTags = () => {
@@ -100,7 +102,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
   catalogChange = (id) => {
     id = this.state.selectedCatalog == id ? '' : id;
     this.setState({ selectedCatalog: id, selectedTag: '' });
-    this.loadArtiels({ catalogId: id });
+    this.loadArtiels({ catalogId: id, tagId: '' }, true);
   };
 
   renderCatalogs() {
@@ -146,14 +148,14 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
   onLoadMore = () => {
     let params = this.state.params;
-    let current= this.state.current;
-    current ++ ;
+    let current = this.state.current;
+    current++;
     params = Object.assign(params, { current: current, step: this.state.step });
     this.props.dispatch({
       type: 'article/loadArticles',
       playload: params,
     });
-    this.setState({current:current})
+    this.setState({ current: current });
   };
 
 
