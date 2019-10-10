@@ -102,7 +102,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
   catalogChange = (id) => {
     id = this.state.selectedCatalog == id ? '' : id;
     this.setState({ selectedCatalog: id, selectedTag: '' });
-    this.loadArtiels({ catalogId: id, tagId: '' }, true);
+    this.loadArtiels({ catalogId: id, tagId: '' }, id != '');
   };
 
   renderCatalogs() {
