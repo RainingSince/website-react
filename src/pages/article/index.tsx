@@ -82,12 +82,13 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
 
   renderLink = (menus: LevelTree[]) => {
     return menus.map((item, index) => {
+      let href = item.title.toLowerCase().replace(/\s*/g, '');
       if (item.children.length > 0) {
-        return <Link title={item.title} href={`#${item.title}`} key={item.title}>
+        return <Link title={item.title} href={`#${href}`} key={index}>
           {this.renderLink(item.children)}
         </Link>;
       } else {
-        return <Link title={item.title} href={`#${item.title}`} key={item.title}/>;
+        return <Link title={item.title} href={`#${href}`} key={index}/>;
       }
     });
   };
@@ -143,7 +144,7 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
               {detail.name}
             </h1>
             <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div>创建时间：{detail.author}</div>
+              <div>作者：{detail.author}</div>
               <div style={{ marginLeft: '30px' }}>创建时间：{detail.createDate}</div>
               <div style={{ marginLeft: '30px' }}>更新时间：{detail.updateDate}</div>
             </div>
