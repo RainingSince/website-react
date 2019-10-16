@@ -69,9 +69,10 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
 
 
   sortTree = (trees: LevelTree[], next: LevelTree) => {
+
     if (trees[0].level < next.level) {
-      if (trees[0].children.length > 0) {
-        this.sortTree(trees[0].children, next);
+      if (trees[trees.length - 1].children.length > 0) {
+        this.sortTree(trees[trees.length - 1].children, next);
       } else {
         trees[trees.length - 1].children.push(next);
       }
