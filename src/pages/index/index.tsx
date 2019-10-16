@@ -54,8 +54,8 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
   loadArtiels = (params, catalog) => {
     let oParams = this.state.params;
-    params = Object.assign(oParams, params);
-    this.setState({ params: params });
+    params = Object.assign(oParams, params, { current: 1, step: this.state.step });
+    this.setState({ params: params, current: 1 });
     this.props.dispatch({
       type: 'article/loadArticles',
       playload: params,
