@@ -177,7 +177,7 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
       <div className="pg-container">
 
-        <div className="pg-content" style={{ marginTop: '15px' }}>
+        <div className="pg-content" style={{ marginTop: '15px', marginBottom: '15px' }}>
 
           <div className="app-catalogs">
             {this.renderCatalogs()}
