@@ -2,6 +2,7 @@ import React from 'react';
 import './index.less';
 import { Layout } from 'antd';
 import CustomHeader from '../components/CustomHeader';
+import CustomTel from '@/components/CustomTel';
 
 const { Content } = Layout;
 
@@ -16,6 +17,7 @@ const BasicLayout: React.FC = props => {
 
   return (
     <div className="normal">
+      <CustomTel/>
       <Layout>
         <CustomHeader/>
         <Content className="app-content">
