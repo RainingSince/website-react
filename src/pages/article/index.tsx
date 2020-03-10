@@ -6,6 +6,7 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/xcode.css';
 import { Anchor, Carousel, Divider, Spin } from 'antd';
 import CustomRecommed from '@/components/CustomRecommed';
+import { getContext } from '@/utils/contextUtils';
 
 const { Link } = Anchor;
 
@@ -126,6 +127,7 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
 
 
   render() {
+    const isPhone = getContext();
 
     let type = this.props.history.location.query.type;
 
@@ -140,23 +142,36 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
       <Spin size="large" spinning={loading}>
         <div>
 
-          <div className='al-title' id='al-title'>
-            <h1>
-              {detail.name}
-            </h1>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <div>作者：{detail.author}</div>
-              <div style={{ marginLeft: '30px' }}>创建时间：{detail.createDate}</div>
-              <div style={{ marginLeft: '30px' }}>更新时间：{detail.updateDate}</div>
-            </div>
+          <div className={isPhone ? 'al-title-phone' : 'al-title'} id='al-title'>
+            {isPhone ? <h4>{detail.name}</h4> : <h1>{detail.name}</h1>}
+
+            {isPhone ? <div>
+                <div style={{ fontSize: '12px' }}>作者：{detail.author}</div>
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div style={{
+                    fontSize: '12px',
+                  }}>创建时间：{detail.createDate}</div>
+                  <div style={{
+                    fontSize: '12px',
+                    marginLeft: '15px',
+                  }}>更新时间：{detail.updateDate}</div>
+                </div>
+              </div>
+              : <div style={{ display: 'flex', alignItems: 'center' }}>
+                <div>作者：{detail.author}</div>
+                <div style={{ marginLeft: '30px' }}>创建时间：{detail.createDate}</div>
+                <div style={{ marginLeft: '30px' }}>更新时间：{detail.updateDate}</div>
+              </div>}
+
+
           </div>
 
-          <Divider/>
+          {isPhone ? <div style={{ height: '1px', backgroundColor: '#e1e3e4', marginTop: '10px' }}> </div> : <Divider/>}
 
           {/*{this.renderImageList()}*/}
 
 
-          <div className='pg-content markdown-css'
+          <div className={isPhone ? 'pg-content-phone markdown-css-phone' : 'pg-content markdown-css'}
                style={{ marginTop: '30px' }}
                dangerouslySetInnerHTML={{ __html: marked(content) }}
           />
@@ -164,7 +179,7 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
         </div>
       </Spin>
 
-      <div>
+      {isPhone ? '' : <div>
 
         {/*<CustomRecommed title="相关笔记">*/}
         {/*<div>123</div>*/}
@@ -174,7 +189,7 @@ class ArticlePage extends React.Component<{ article, submitting, submittingP, di
             {this.renderDir(content)}
           </CustomRecommed>
         </Spin>
-      </div>
+      </div>}
 
     </div>;
   }

@@ -3,6 +3,7 @@ import './index.less';
 import { Layout } from 'antd';
 import CustomHeader from '../components/CustomHeader';
 import CustomTel from '@/components/CustomTel';
+import { getContext } from '@/utils/contextUtils';
 
 const { Content } = Layout;
 
@@ -14,13 +15,14 @@ const BasicLayout: React.FC = props => {
   //     {props.children}
   //   </div>);
 
+  const isPhone = getContext();
 
   return (
     <div className="normal">
-      <CustomTel/>
+      {isPhone ? '' : <CustomTel/>}
       <Layout>
         <CustomHeader/>
-        <Content className="app-content">
+        <Content className={isPhone ? 'app-content-phone' : 'app-content'}>
           {props.children}
         </Content>
       </Layout>

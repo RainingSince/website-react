@@ -2,6 +2,7 @@ import React from 'react';
 import './index.less';
 import { Layout, Menu } from 'antd';
 import { withRouter } from 'umi';
+import { getContext } from '@/utils/contextUtils';
 
 
 const { Header } = Layout;
@@ -65,23 +66,54 @@ class CustomHeader extends React.Component<CustomHeaderProps, {
   };
 
 
+  getHeaderContent = () => {
+    let isPhone = getContext();
+    return isPhone ?
+      <Menu mode="horizontal"
+            style={{
+              width: '100vw',
+              textAlign: 'center',
+              lineHeight: '45px',
+              height: '45px',
+              fontSize: '12px ',
+              border: 'none',
+            }}
+            defaultSelectedKeys={['0']}
+            selectedKeys={[this.state.defaultSelect]}>
+        {
+          this.state.headerMenus.map((item, index) =>
+            <Menu.Item key={index} onClick={e => this.menuClick(item)}>
+              {item}
+            </Menu.Item>)
+        }
+      </Menu>
+      : <Menu mode="horizontal"
+              style={{
+                width: '1200px',
+                textAlign: 'end',
+                lineHeight: '62px',
+                border: 'none',
+                marginRight: '30px',
+              }}
+              defaultSelectedKeys={['0']}
+              selectedKeys={[this.state.defaultSelect]}>
+        {
+          this.state.headerMenus.map((item, index) =>
+            <Menu.Item key={index} onClick={e => this.menuClick(item)}>
+              {item}
+            </Menu.Item>)
+        }
+      </Menu>;
+  };
+
   randerMenus() {
-    return <Menu mode="horizontal"
-                 style={{ width: '1200px', textAlign: 'end', lineHeight: '62px', border: 'none', marginRight: '30px' }}
-                 defaultSelectedKeys={['0']}
-                 selectedKeys={[this.state.defaultSelect]}>
-      {
-        this.state.headerMenus.map((item, index) =>
-          <Menu.Item key={index} onClick={e => this.menuClick(item)}>
-            {item}
-          </Menu.Item>)
-      }
-    </Menu>;
+    return (this.getHeaderContent());
   }
 
 
   render() {
-    return <Header className="app-header">
+    const isPhone = getContext();
+    return <Header className={isPhone ? 'app-header-phone app-header' : 'app-header'}>
       {this.randerMenus()}
     </Header>;
   }

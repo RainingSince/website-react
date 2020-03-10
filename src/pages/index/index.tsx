@@ -5,6 +5,7 @@ import { connect } from 'dva';
 import { withRouter } from 'umi';
 import CustomRecommed from '@/components/CustomRecommed';
 import ArticleItem from '@/components/ArticleItem';
+import { getContext } from '@/utils/contextUtils';
 
 
 // @ts-ignore
@@ -65,10 +66,15 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
 
   toDetail = (item) => {
-    this.props.history.push({
-      pathname: '/article',
-      query: { id: item.id, type: '1' },
-    });
+    const isPhone = getContext();
+    if (!isPhone) {
+      let url = '/article.html?id=' + item.id + '&type=1';
+      window.open(url, '_blank');
+    } else
+      this.props.history.push({
+        pathname: '/article',
+        query: { id: item.id, type: '1' },
+      });
   };
 
 
@@ -90,9 +96,11 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
   };
 
   renderTags = () => {
+    const isPhone = getContext();
     return this.props.tags.map((item, index) => {
       return <Tag
         key={index}
+        style={isPhone ? { fontSize: '12px' } : {}}
         className={this.state.selectedTag == item.id ? 'app-tag app-tag-select' : 'app-tag '}
         onClick={e => this.tagSelect(item.id)}
       >{item.name}</Tag>;
@@ -106,7 +114,13 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
   };
 
   renderCatalogs() {
-    return <Menu mode="horizontal" style={{ lineHeight: '62px', border: 'none' }}
+    const isPhone = getContext();
+
+    return <Menu mode="horizontal"
+                 style={isPhone ? { lineHeight: '40px', fontSize: '12px', border: 'none' } : {
+                   lineHeight: '62px',
+                   border: 'none',
+                 }}
                  defaultSelectedKeys={['all']}>
       {
         <Menu.Item key='all' onClick={e => this.catalogChange('')}>
@@ -125,11 +139,15 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
 
   renderArticleTags = () => {
+    const isPhone = getContext();
+
     if (this.state.selectedCatalog != '') {
       return <div className="app-tags">
-        {this.props.tags.length > 0 ? <Tag key='all'
-                                           className={this.state.selectedTag == '' ? 'app-tag app-tag-select' : 'app-tag '}
-                                           onClick={e => this.tagSelect('')}>全部</Tag> : ''}
+        {this.props.tags.length > 0 ?
+          <Tag key='all'
+               className={this.state.selectedTag == '' ? 'app-tag app-tag-select' : 'app-tag '}
+               style={isPhone ? { fontSize: '12px' } : {}}
+               onClick={e => this.tagSelect('')}>全部</Tag> : ''}
         {this.renderTags()}
       </div>;
     } else {
@@ -160,32 +178,43 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
 
   render() {
+    const isPhone = getContext();
     const isMore = this.props.articles.total > (this.state.current * this.state.step);
     const loadMore = isMore && !this.props.submitting ? (<div
-      style={{
+      style={isPhone ? {
+        textAlign: 'center',
+        marginTop: 12,
+        height: '26px',
+        lineHeight: '26px',
+      } : {
         textAlign: 'center',
         marginTop: 12,
         height: 32,
         lineHeight: '32px',
       }}
     >
-      <Button onClick={this.onLoadMore}>加载更多</Button>
+      <Button style={isPhone ? { fontSize: '12px' } : {}} onClick={this.onLoadMore}>加载更多</Button>
 
     </div>) : null;
+
 
     return (
 
       <div className="pg-container">
 
-        <div className="pg-content" style={{ marginTop: '15px', marginBottom: '15px' }}>
+        <div className={isPhone ? 'pg-content-phone' : 'pg-content'}
+             style={isPhone ? { marginTop: '10px', marginBottom: '10px' } : {
+               marginTop: '15px',
+               marginBottom: '15px',
+             }}>
 
-          <div className="app-catalogs">
+          <div className={isPhone ? 'app-catalogs app-catalogs-phone' : 'app-catalogs'}>
             {this.renderCatalogs()}
           </div>
 
           {this.renderArticleTags()}
 
-          <Row type="flex" className="pg-content">
+          <Row type="flex" className={isPhone ? '' : 'pg-content'}>
 
             <List itemLayout="vertical"
                   className="app-list"
@@ -200,11 +229,11 @@ class IndexPage extends React.PureComponent<{ dispatch, submitting, recentArticl
 
         </div>
 
-        <div>
+        {isPhone ? '' : <div>
           <CustomRecommed title="近期更新">
             {this.reanderRightArticle()}
           </CustomRecommed>
-        </div>
+        </div>}
 
       </div>
     );

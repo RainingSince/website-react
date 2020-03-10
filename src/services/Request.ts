@@ -41,7 +41,7 @@ const errorHandler = error => {
 
 class request {
 
-  static BASE_URL = 'http://api.caodebo.com/website/';
+  static BASE_URL = 'http://api.rainingsince.com/';
 
   static get(path, params) {
     return this.fetchData(path, 'GET', params);
